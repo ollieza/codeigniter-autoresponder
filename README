@@ -1,0 +1,45 @@
+Autoresponder library
+=============================================
+
+This CodeIgniter library sends emails using templates stored in database.
+
+Autoresponder templates
+------------------------
+
+Variables can added to autoresponder templates using the format %variable.
+
+e.g. Welcome %first_name %last_name
+
+Config
+------
+
+Add your email address and website name to the config file settings.
+
+Usage:
+------
+
+Sending an autoresponder:
+
+$this->autoresponder->to_email('joblogs363@mailinator.com);
+$this->autoresponder->to_name('Jo blogs');
+$this->autoresponder->variable_values(array('first_name' => 'Ollie', 'last_name' => 'Rattue'));
+$this->autoresponder->send('membership_user');
+
+-> 'membership_user' refers to the value in autoresponder_name in autoresponder table (db).
+
+Other functions:
+
+$this->autoresponder->dump('membership_user');
+-> Returns the message and subject with variable values substituted. Useful for debugging.
+
+$this->autoresponder->attachments(array('/path/to/foo/bar'));
+-> Attach a file to the autoresponder
+
+$this->autoresponder->bcc_notify();
+-> Send a carbon copy of the email to your notification email address
+
+Extra
+-----
+
+If you'd like to request changes, report bug fixes, or contact
+the developer of this library, please email <orattue[at]toomanytabs.com>
