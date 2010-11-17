@@ -3,8 +3,15 @@ Autoresponder library
 
 This CodeIgniter library sends emails using templates stored in database.
 
+Schema
+-------
+
+Load the database table schema autoresponders and autoresponders_log
+
 Autoresponder templates
 ------------------------
+
+Insert your templates into the database table autoresponders.
 
 Variables can added to autoresponder templates using the format %variable.
 
