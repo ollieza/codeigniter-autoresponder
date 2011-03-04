@@ -1,4 +1,4 @@
-Autoresponder library
+Autoresponder library - Functional - CI 2.0 Reactor compatible
 =============================================
 
 This CodeIgniter library sends emails using templates stored in database.
