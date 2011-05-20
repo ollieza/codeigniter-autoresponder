@@ -101,7 +101,8 @@ class Autoresponder {
 			return TRUE;
 		}
 
-		if (!$this->dump && (!$autoresponder_name || !$this->to_name || (!valid_email($this->to_email)))) // check to see that we received some parameters
+		// check to see that we received some parameters
+		if (!$this->dump && (!$autoresponder_name || !valid_email($this->to_email)))
 		{
 			return FALSE;
 		}
@@ -169,8 +170,16 @@ class Autoresponder {
 		$this->CI->email->initialize($config);
 
 		$this->CI->email->from($this->from_email, $this->from_name);
-		$this->CI->email->to($this->to_email, $this->to_name);
 
+		if ($this->to_name)
+		{
+			$this->CI->email->to($this->to_email, $this->to_name);
+		}
+		else
+		{
+			$this->CI->email->to($this->to_email);
+		}
+		
 		if ($this->bcc_notify) 
 		{
 			$this->CI->email->bcc($this->bcc_notification_email);
