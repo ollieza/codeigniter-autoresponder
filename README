@@ -1,5 +1,5 @@
-Autoresponder library - Functional - CI 2.0 Reactor compatible
-=============================================
+Autoresponder library - Fully functional - CI 2.0 Reactor compatible
+====================================================================
 
 This CodeIgniter library sends emails using templates stored in database.
 
@@ -27,7 +27,7 @@ Usage:
 
 Sending an autoresponder:
 
-$this->autoresponder->to_email('joblogs363@mailinator.com);
+$this->autoresponder->to_email('joblogs363@mailinator.com');
 $this->autoresponder->to_name('Jo blogs');
 $this->autoresponder->variable_values(array('first_name' => 'Ollie', 'last_name' => 'Rattue'));
 $this->autoresponder->send('membership_user');
