@@ -150,8 +150,20 @@ class Autoresponder {
 
 		// substitute the array values for the saved placeholder values
 		$subject = str_replace(array_keys($this->variable_values), array_values($this->variable_values), $autoresponder->autoresponder_subject);
-		$message = nl2br(str_replace(array_keys($this->variable_values), array_values($this->variable_values), $autoresponder->autoresponder_message));
+		$message = str_replace(array_keys($this->variable_values), array_values($this->variable_values), $autoresponder->autoresponder_message);
 
+		// Send the email
+		$config = array();
+		$config['charset'] = 'utf-8';
+		$config['mailtype'] = 'html';
+		
+		if ($config['mailtype'] == 'html') // Added to allow future html or plaintext support
+		{
+			$message = $this->nl2p($message);
+			$message = "<html><body>".$message;
+			$message .= "</html></body>";
+		}
+		
 		// Used for debugging
 		if ($this->dump)
 		{
@@ -165,8 +177,6 @@ class Autoresponder {
 
 		// send the email
 		$this->CI->email->clear();
-		$config['charset'] = 'utf-8';
-		$config['mailtype'] = 'html';
 		$this->CI->email->initialize($config);
 
 		$this->CI->email->from($this->from_email, $this->from_name);
@@ -228,6 +238,37 @@ class Autoresponder {
 		$this->CI->autoresponder_model->log_email($autoresponder_log);
 
 		return $email_sent;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns string with newline formatting converted into HTML paragraphs.
+	 *
+	 * @author Michael Tomasello <miketomasello@gmail.com>
+	 * @copyright Copyright (c) 2007, Michael Tomasello
+	 * @license http://www.opensource.org/licenses/bsd-license.html BSD License
+	 * 
+	 * @param string $string String to be formatted.
+	 * @param boolean $line_breaks When true, single-line line-breaks will be converted to HTML break tags.
+	 * @param boolean $xml When true, an XML self-closing tag will be applied to break tags (<br />).
+	 * @return string
+	 */
+	function nl2p($string, $line_breaks = true, $xml = true)
+	{
+	    // Remove existing HTML formatting to avoid double-wrapping things
+	    $string = str_replace(array('<p>', '</p>', '<br>', '<br />'), '', $string);
+
+	    // It is conceivable that people might still want single line-breaks
+	    // without breaking into a new paragraph.
+	    if ($line_breaks == true)
+		{
+			return '<p>'.preg_replace(array("/([\n]{2,})/i", "/([^>])\n([^<])/i"), array("</p>\n<p>", '<br'.($xml == true ? ' /' : '').'>'), trim($string)).'</p>';
+		}
+	    else
+	 	{
+			return '<p>'.preg_replace("/([\n]{1,})/i", "</p>\n<p>", trim($string)).'</p>';
+		}
 	}
 
 	// --------------------------------------------------------------------
