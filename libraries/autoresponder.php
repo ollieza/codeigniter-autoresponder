@@ -199,7 +199,7 @@ class Autoresponder {
 			return $email_dump;
 		}
 		
-		if ($this->config['use_smtp'] == TRUE)
+		if ($this->config['autoresponder_use_smtp'] == TRUE)
 		{
 			$config = array(
 			    'protocol' 		=> $this->config['autoresponder_protocol'],
