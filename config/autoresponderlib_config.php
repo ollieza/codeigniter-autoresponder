@@ -12,7 +12,7 @@ $config['autoresponder_from_email'] = "info@yourdomain.com";
 $config['autoresponder_from_name'] = 'Your website name';
 
 $config['autoresponder_mailtype'] = 'text';
-$config['autoresponder_mailcharset'] = 'utf-8';
+$config['autoresponder_charset'] = 'utf-8';
 $config['autoresponder_wordwrap'] = TRUE;
 
 // SMTP settings
