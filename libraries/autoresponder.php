@@ -44,7 +44,7 @@ class Autoresponder {
 		$this->bcc_notification_email = $this->config['autoresponder_bcc_notification_email'];
 		$this->mailtype = $this->config['autoresponder_mailtype'];
 		$this->charset = $this->config['autoresponder_charset'];
-		$this->charset = $this->config['autoresponder_wordwrap'];
+		$this->wordwrap = $this->config['autoresponder_wordwrap'];
 	}
 
 	// --------------------------------------------------------------------
