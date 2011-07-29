@@ -37,9 +37,9 @@ class Autoresponder {
 		$this->CI->load->helper('email'); // used for valid_email function
 		$this->CI->load->model('autoresponder_model');
 
-		$this->from_name = $this->config['autoresponders_from_name'];
-		$this->from_email = $this->config['autoresponders_from_email'];
-		$this->autoresponders_enable = $this->config['autoresponders_enable'];	
+		$this->from_name = $this->config['autoresponder_from_name'];
+		$this->from_email = $this->config['autoresponder_from_email'];
+		$this->autoresponders_enable = $this->config['autoresponder_enable'];	
 		$this->bcc_notification_email = $this->config['autoresponder_bcc_notification_email'];
 		$this->mailtype = $this->config['autoresponder_mailtype'];
 		$this->charset = $this->config['autoresponder_charset'];
