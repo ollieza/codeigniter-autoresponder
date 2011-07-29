@@ -24,6 +24,7 @@ class Autoresponder {
 	var $dump = FALSE;
 	var $mailtype = 'html';
 	var $charset = 'utf-8';
+	var $wordwrap = TRUE;
 	
 	function Autoresponder()
 	{
@@ -43,6 +44,7 @@ class Autoresponder {
 		$this->bcc_notification_email = $this->config['autoresponder_bcc_notification_email'];
 		$this->mailtype = $this->config['autoresponder_mailtype'];
 		$this->charset = $this->config['autoresponder_charset'];
+		$this->charset = $this->config['autoresponder_wordwrap'];
 	}
 
 	// --------------------------------------------------------------------
@@ -177,6 +179,7 @@ class Autoresponder {
 		$config = array();
 		$config['charset'] = $this->charset;
 		$config['mailtype'] = $this->mailtype;
+		$config['wordwrap'] = $this->wordwrap;
 
 		if ($config['mailtype'] == 'html') // Added to allow future html or plaintext support
 		{
