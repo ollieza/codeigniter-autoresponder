@@ -7,7 +7,7 @@
  * @package   autoresponder
  * @version   1.0
  * @author    Ollie Rattue, Too many tabs <orattue[at]toomanytabs.com>
- * @copyright Copyright (c) 2011, Ollie Rattue
+ * @copyright Copyright (c) 2010, Ollie Rattue
  * @license   http://www.opensource.org/licenses/mit-license.php
  * @link      http://github.com/ollierattue/codeigniter-autoresponder
  */
@@ -22,20 +22,27 @@ class Autoresponder {
 	var $bcc_notify = FALSE;
 	var $attachments = array();
 	var $dump = FALSE;
-
+	var $mailtype = 'html';
+	var $charset = 'utf-8';
+	
 	function Autoresponder()
 	{
 		// Load CI instance so we can get config values etc
 		$this->CI =& get_instance();
-		$this->CI->load->config('autoresponderlib_config');
+
+		// Load config		
+		$this->CI->load->config('autoresponderlib_config', TRUE);
+		$this->config = $this->CI->config->item('autoresponderlib_config');
+		
 		$this->CI->load->helper('email'); // used for valid_email function
-		$this->CI->load->library('email');
 		$this->CI->load->model('autoresponder_model');
 
-		$this->from_name = $this->CI->config->item('autoresponders_from_name');
-		$this->from_email = $this->CI->config->item('autoresponders_from_email');
-		$this->autoresponders_enable = $this->CI->config->item('autoresponders_enable');	
-		$this->bcc_notification_email = $this->CI->config->item('bcc_notification_email');
+		$this->from_name = $this->config['autoresponders_from_name'];
+		$this->from_email = $this->config['autoresponders_from_email'];
+		$this->autoresponders_enable = $this->config['autoresponders_enable'];	
+		$this->bcc_notification_email = $this->config['autoresponder_bcc_notification_email'];
+		$this->mailtype = $this->config['autoresponder_mailtype'];
+		$this->charset = $this->config['autoresponder_charset'];
 	}
 
 	// --------------------------------------------------------------------
@@ -50,6 +57,20 @@ class Autoresponder {
 	function to_name($to_name = NULL)
 	{
 		$this->to_name = $to_name;
+	}	
+
+	// --------------------------------------------------------------------
+
+	function from_email($from_email = NULL)
+	{
+		$this->from_email = $from_email;
+	}
+
+	// --------------------------------------------------------------------
+
+	function from_name($from_name = NULL)
+	{
+		$this->from_name = $from_name;
 	}	
 
 	// --------------------------------------------------------------------
@@ -100,7 +121,7 @@ class Autoresponder {
 		{
 			return TRUE;
 		}
-
+		
 		// check to see that we received some parameters
 		if (!$this->dump && (!$autoresponder_name || !valid_email($this->to_email)))
 		{
@@ -154,9 +175,9 @@ class Autoresponder {
 
 		// Send the email
 		$config = array();
-		$config['charset'] = 'utf-8';
-		$config['mailtype'] = 'html';
-		
+		$config['charset'] = $this->charset;
+		$config['mailtype'] = $this->mailtype;
+
 		if ($config['mailtype'] == 'html') // Added to allow future html or plaintext support
 		{
 			$message = $this->nl2p($message);
@@ -174,13 +195,27 @@ class Autoresponder {
 
 			return $email_dump;
 		}
-
-		// send the email
+		
+		if ($this->config['use_smtp'] == TRUE)
+		{
+			$config = array(
+			    'protocol' 		=> $this->config['autoresponder_protocol'],
+			    'smtp_host' 	=> $this->config['autoresponder_smtp_host'],
+			    'smtp_port' 	=> $this->config['autoresponder_smtp_port'],
+			    'smtp_user' 	=> $this->config['autoresponder_smtp_user'],
+			    'smtp_pass' 	=> $this->config['autoresponder_smtp_pass'],
+			    'smtp_timeout' 	=> $this->config['autoresponder_smtp_timeout']
+			);
+		}
+		
+		$this->CI->load->library('email', $config);
+		
 		$this->CI->email->clear();
-		$this->CI->email->initialize($config);
-
+		$this->CI->email->set_newline("\r\n");
+		$message = str_replace("\n", "\r\n", $message);
+		
 		$this->CI->email->from($this->from_email, $this->from_name);
-
+		
 		if ($this->to_name)
 		{
 			$this->CI->email->to($this->to_email, $this->to_name);
@@ -198,6 +233,11 @@ class Autoresponder {
 		$this->CI->email->subject($subject);
 		$this->CI->email->message($message);
 
+		if ($config['mailtype'] == 'html') // Added to allow future html or plaintext support
+		{
+			$this->CI->email->set_alt_message($message);
+		}
+		
 		if ($this->attachments) 
 		{
 			foreach ($this->attachments as $key => $file_path) 
@@ -241,7 +281,7 @@ class Autoresponder {
 	}
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Returns string with newline formatting converted into HTML paragraphs.
 	 *
