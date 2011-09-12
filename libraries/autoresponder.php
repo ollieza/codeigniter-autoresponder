@@ -188,14 +188,6 @@ class Autoresponder {
 		$config['charset'] = $this->charset;
 		$config['mailtype'] = $this->mailtype;
 		$config['wordwrap'] = $this->wordwrap;
-
-		if ($config['mailtype'] == 'html')
-		{
-			$this->CI->email->set_alt_message($message);
-			
-			$message = $this->nl2p($message);
-			$message = "<html><body>{$message}</html></body>";
-		}
 		
 		// Used for debugging
 		if ($this->dump)
@@ -248,6 +240,15 @@ class Autoresponder {
 		}
 		
 		$this->CI->email->subject($subject);
+
+		if ($config['mailtype'] == 'html')
+		{
+			$this->CI->email->set_alt_message($message);
+			
+			$message = $this->nl2p($message);
+			$message = "<html><body>{$message}</html></body>";
+		}
+
 		$this->CI->email->message($message);
 
 		if ($this->attachments) 
