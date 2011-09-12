@@ -202,14 +202,12 @@ class Autoresponder {
 		
 		if ($this->config['autoresponder_use_smtp'] == TRUE)
 		{
-			$config = array(
-			    'protocol' 		=> $this->config['autoresponder_protocol'],
-			    'smtp_host' 	=> $this->config['autoresponder_smtp_host'],
-			    'smtp_port' 	=> $this->config['autoresponder_smtp_port'],
-			    'smtp_user' 	=> $this->config['autoresponder_smtp_user'],
-			    'smtp_pass' 	=> $this->config['autoresponder_smtp_pass'],
-			    'smtp_timeout' 	=> $this->config['autoresponder_smtp_timeout']
-			);
+			$config['protocol'] = $this->config['autoresponder_protocol'];
+			$config['smtp_host'] = $this->config['autoresponder_smtp_host'];
+			$config['smtp_port'] = $this->config['autoresponder_smtp_port'];
+			$config['smtp_user'] = $this->config['autoresponder_smtp_user'];
+			$config['smtp_pass'] = $this->config['autoresponder_smtp_pass'];
+			$config['smtp_timeout'] = $this->config['autoresponder_smtp_timeout'];
 		}
 		
 		$this->CI->load->library('email', $config);
@@ -240,10 +238,10 @@ class Autoresponder {
 		}
 		
 		$this->CI->email->subject($subject);
-
-		if ($config['mailtype'] == 'html')
+		
+		if ($this->mailtype == 'html')
 		{
-			$this->CI->email->set_alt_message($message);
+			$this->CI->email->set_alt_message(strip_tags($message));
 			
 			$message = $this->nl2p($message);
 			$message = "<html><body>{$message}</html></body>";
@@ -294,35 +292,15 @@ class Autoresponder {
 	}
 
 	// --------------------------------------------------------------------
-
-	/**
-	 * Returns string with newline formatting converted into HTML paragraphs.
-	 *
-	 * @author Michael Tomasello <miketomasello@gmail.com>
-	 * @copyright Copyright (c) 2007, Michael Tomasello
-	 * @license http://www.opensource.org/licenses/bsd-license.html BSD License
-	 * 
-	 * @param string $string String to be formatted.
-	 * @param boolean $line_breaks When true, single-line line-breaks will be converted to HTML break tags.
-	 * @param boolean $xml When true, an XML self-closing tag will be applied to break tags (<br />).
-	 * @return string
-	 */
 	
-	function nl2p($string, $line_breaks = true, $xml = true)
-	{
-	    // Remove existing HTML formatting to avoid double-wrapping things
-	    $string = str_replace(array('<p>', '</p>', '<br>', '<br />'), '', $string);
+	// http://tycoontalk.freelancer.com/php-forum/151623-php-nl2p-one-problem.html#post759987
 
-	    // It is conceivable that people might still want single line-breaks
-	    // without breaking into a new paragraph.
-	    if ($line_breaks == true)
-		{
-			return '<p>'.preg_replace(array("/([\n]{2,})/i", "/([^>])\n([^<])/i"), array("</p>\n<p>", '<br'.($xml == true ? ' /' : '').'>'), trim($string)).'</p>';
-		}
-	    else
-	 	{
-			return '<p>'.preg_replace("/([\n]{1,})/i", "</p>\n<p>", trim($string)).'</p>';
-		}
+	function nl2p($string = NULL)
+	{
+	    $string = "<p>" . $string . "</p>";
+	    $string = preg_replace("/\r\n\r\n/", "</p>\n\n<p>", $string);
+	    $string = preg_replace("/\r\n/", "<br />", $string);
+	    return $string;
 	}
 
 	// --------------------------------------------------------------------
