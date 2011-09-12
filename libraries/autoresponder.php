@@ -18,7 +18,7 @@ class Autoresponder {
 	var $CI;
 	var $to_name = NULL;
 	var $to_email = NULL;
-	var $reply_email = NULL
+	var $reply_email = NULL;
 	var $variable_values = array();
 	var $bcc_notify = FALSE;
 	var $attachments = array();
