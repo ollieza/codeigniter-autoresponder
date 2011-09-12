@@ -189,11 +189,12 @@ class Autoresponder {
 		$config['mailtype'] = $this->mailtype;
 		$config['wordwrap'] = $this->wordwrap;
 
-		if ($config['mailtype'] == 'html') // Added to allow future html or plaintext support
+		if ($config['mailtype'] == 'html')
 		{
+			$this->CI->email->set_alt_message($message);
+			
 			$message = $this->nl2p($message);
-			$message = "<html><body>".$message;
-			$message .= "</html></body>";
+			$message = "<html><body>{$message}</html></body>";
 		}
 		
 		// Used for debugging
@@ -249,11 +250,6 @@ class Autoresponder {
 		$this->CI->email->subject($subject);
 		$this->CI->email->message($message);
 
-		if ($config['mailtype'] == 'html') // Added to allow future html or plaintext support
-		{
-			$this->CI->email->set_alt_message($message);
-		}
-		
 		if ($this->attachments) 
 		{
 			foreach ($this->attachments as $key => $file_path) 
@@ -310,6 +306,7 @@ class Autoresponder {
 	 * @param boolean $xml When true, an XML self-closing tag will be applied to break tags (<br />).
 	 * @return string
 	 */
+	
 	function nl2p($string, $line_breaks = true, $xml = true)
 	{
 	    // Remove existing HTML formatting to avoid double-wrapping things
