@@ -18,6 +18,7 @@ class Autoresponder {
 	var $CI;
 	var $to_name = NULL;
 	var $to_email = NULL;
+	var $reply_email = NULL
 	var $variable_values = array();
 	var $bcc_notify = FALSE;
 	var $attachments = array();
@@ -77,6 +78,13 @@ class Autoresponder {
 
 	// --------------------------------------------------------------------
 
+	function reply_email($reply_email = NULL)
+	{
+		$this->reply_email = $reply_email;		
+	}
+
+	// --------------------------------------------------------------------
+	
 	function variable_values($variable_values = array())
 	{
 		$this->variable_values = $variable_values;
@@ -233,6 +241,11 @@ class Autoresponder {
 			$this->CI->email->bcc($this->bcc_notification_email);
 		}
 
+		if ($this->reply_email)
+		{
+			$this->CI->email->reply_to($this->reply_email);			
+		}
+		
 		$this->CI->email->subject($subject);
 		$this->CI->email->message($message);
 
