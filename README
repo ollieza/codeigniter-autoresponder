@@ -44,9 +44,3 @@ $this->autoresponder->attachments(array('/path/to/foo/bar'));
 
 $this->autoresponder->bcc_notify();
 -> Send a carbon copy of the email to your notification email address
-
-Extra
------
-
-If you'd like to request changes, report bug fixes, or contact
-the developer of this library, please email <orattue[at]toomanytabs.com>
