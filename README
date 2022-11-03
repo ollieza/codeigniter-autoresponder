@@ -28,8 +28,8 @@ Usage:
 Sending an autoresponder:
 
 $this->autoresponder->to_email('joblogs363@mailinator.com');
-$this->autoresponder->to_name('Jo blogs');
-$this->autoresponder->variable_values(array('first_name' => 'Ollie', 'last_name' => 'Rattue'));
+$this->autoresponder->to_name('Jo Blogs');
+$this->autoresponder->variable_values(array('first_name' => 'Joe', 'last_name' => 'Blogs'));
 $this->autoresponder->send('membership_user');
 
 -> 'membership_user' refers to the value in autoresponder_name in autoresponder table (db).
